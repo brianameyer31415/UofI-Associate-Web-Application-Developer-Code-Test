@@ -10,47 +10,43 @@ With three tables of normalized data named: Employees, Departments, Tickets. Ass
 Below is an example of getting the three employess per department that closed the most tickets in the last ~30 days.
 
 ```sql
-WITH ResolvedTickets AS (
-    SELECT 
+with resolved_tickets as (
+    select 
         e.employee_id,
-        e.first_name,
+        concat(e.first_name, ' ', e.last_name) as employee_name,
         d.department_id,
         d.department_name,
-        COUNT(t.ticket_id) AS resolved_count
-    FROM 
-        Employees e
-    JOIN 
-        Tickets t ON e.employee_id = t.employee_id
-    JOIN 
-        Departments d ON e.department_id = d.department_id
-    WHERE 
-        t.status = 'closed' 
-        AND t.resolved_date >= DATEADD(month, -1, GETDATE())
-    GROUP BY 
-        e.employee_id, e.first_name, d.department_id, d.department_name
+        count(t.ticket_id) as resolved_ticket_count
+    from employees e
+    join tickets t on e.employee_id = t.employee_id
+    join Departments d on e.department_id = d.department_id
+    where 
+		t.status = 'closed' and t.resolved_date >= DATEADD(month, -1, GETDATE())
+    group by e.employee_id, e.first_name, e.last_name, d.department_id, d.department_name
 ),
-RankedEmployees AS (
-    SELECT 
+ranked_employees as (
+    select 
         employee_id,
-        first_name,
+        employee_name,
         department_id,
         department_name,
-        resolved_count,
-        ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY resolved_count DESC) AS rank
-    FROM 
-        ResolvedTickets
+        resolved_ticket_count,
+        ROW_NUMBER() OVER (PARTITION BY department_id order by resolved_ticket_count desc) as rank_in_department
+    from resolved_tickets
 )
-SELECT 
+
+select 
     employee_id,
-    first_name,
+    employee_name,
+	department_id,
     department_name,
-    resolved_count
-FROM 
-    RankedEmployees
-WHERE 
-    rank <= 3
-ORDER BY 
-    department_id, rank;
+    resolved_ticket_count,
+	rank_in_department,
+	DATEADD(month, -1, GETDATE()) as start_filter_date,
+	GETDATE() as end_filter_date
+from ranked_employees
+where rank_in_department <= 3
+order by department_id, rank_in_department;
 ```
 
 
@@ -63,31 +59,31 @@ Below is an example of getting the three employess per department that closed th
 With ranked_employees as (
 
     select 
-        e.id as employee_id,
+        e.employee_id,
         concat(e.first_name, ' ', e.last_name) as employee_name,
         e.department_id,
-        d.name as department_name,
+        d.department_name,
                 
-       		(
-         	select count(t.id) 
-     	 		from tickets t 
-         		where t.assigned_employee_id = e.id 
-				and t.date_completed between concat(DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01'), ' 00:00:00') and concat(LAST_DAY(CURDATE() - INTERVAL 1 MONTH), ' 23:59:59')
-        	) as count_of_closed_tickets_last_month,
+       	(
+         	select count(t.ticket_id) 
+     	 	from tickets t 
+         	where t.employee_id = e.employee_id 
+			and t.resolved_date between concat(format(dateadd(MONTH, -1, CAST(GETDATE() AS DATE)), 'yyyy-MM-01'), ' 00:00:00') and concat(format(EOMONTH(GETDATE(), -1), 'yyyy-MM-dd'), ' 23:59:59')
+        ) as resolved_ticket_count,
 
         ROW_NUMBER() OVER 
         (
 		PARTITION BY e.department_id order by 
         	(
-			select count(t.id) 
+			select count(t.ticket_id) 
              		from tickets t 
-             		where t.assigned_employee_id = e.id 
-               		and t.date_completed between concat(DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01'), ' 00:00:00') and concat(LAST_DAY(CURDATE() - INTERVAL 1 MONTH), ' 23:59:59')
+             		where t.employee_id = e.employee_id 
+               		and t.resolved_date between concat(format(dateadd(MONTH, -1, CAST(GETDATE() as date)), 'yyyy-MM-01'), ' 00:00:00') and concat(format(EOMONTH(GETDATE(), -1), 'yyyy-MM-dd'), ' 23:59:59')
 			) desc
         ) as rank_in_department
 
     from employees e
-    left join departments d on e.department_id = d.id
+    left join departments d on e.department_id = d.department_id
 )
 
 select
@@ -95,12 +91,12 @@ select
     employee_name,
     department_id,
     department_name,
-    count_of_closed_tickets_last_month,
+    resolved_ticket_count,
     rank_in_department,
-    concat(DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01'), ' 00:00:00') as start_filter_date,
-    concat(LAST_DAY(CURDATE() - INTERVAL 1 MONTH), ' 23:59:59') as end_filter_date
+    concat(format(dateadd(MONTH, -1, CAST(GETDATE() as date)), 'yyyy-MM-01'), ' 00:00:00') as start_filter_date,
+    concat(format(EOMONTH(GETDATE(), -1), 'yyyy-MM-dd'), ' 23:59:59') as end_filter_date
 from ranked_employees
 -- where rank_in_department in (1, 2, 3)
 where rank_in_department <= 3
-order by department_id ASC, rank_in_department asc;
+order by department_id asc, rank_in_department asc;
 ```
