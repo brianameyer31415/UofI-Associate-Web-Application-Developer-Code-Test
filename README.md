@@ -5,7 +5,7 @@ With three tables of normalized data named: Employees, Departments, Tickets. Ass
 
 
 
-### Solution One:
+## Solution One:
 
 Below is an example of getting the three employess per department that closed the most tickets in the last ~30 days.
 
@@ -49,9 +49,30 @@ where rank_in_department <= 3
 order by department_id, rank_in_department;
 ```
 
+</br>
+</br>
+
+### Below is the output of the above Query. Ran on 01-24-2025
+
+| employee_id | employee_name | department_id | department_name | resolved_ticket_count | rank_in_department | start_filter_date       | end_filter_date         |
+|-------------|---------------|---------------|-----------------|-----------------------|--------------------|-------------------------|-------------------------|
+| 1           | Brian Meyer   | 1             | Web Services    | 9                     | 1                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 7           | Hannah Mazze  | 1             | Web Services    | 5                     | 2                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 2           | Jeremy Bird   | 1             | Web Services    | 4                     | 3                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 9           | Genny Goodman | 2             | IT Services     | 10                    | 1                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 3           | Joe Smith     | 2             | IT Services     | 9                     | 2                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 4           | Alex Rogers   | 2             | IT Services     | 7                     | 3                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 5           | Julian Smith  | 3             | Networking      | 12                    | 1                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 6           | Ginger Meyer  | 3             | Networking      | 10                    | 2                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
+| 11          | Mark Korte    | 3             | Networking      | 6                     | 3                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
 
 
-### Solution Two:
+
+</br>
+</br>
+</br>
+
+## Solution Two:
 
 Below is an example of getting the three employess per department that closed the most tickets last month. If we where to run this SQL during the month of Jan 2025 then we would only be looking at tickets closed during the month od Dev 2024.
 
@@ -100,3 +121,20 @@ from ranked_employees
 where rank_in_department <= 3
 order by department_id asc, rank_in_department asc;
 ```
+
+</br>
+</br>
+
+### Below is the output of the above Query. Ran on 01-24-2025
+
+| employee_id | employee_name | department_id | department_name | resolved_ticket_count | rank_in_department | start_filter_date       | end_filter_date         |
+|-------------|---------------|---------------|-----------------|-----------------------|--------------------|-------------------------|-------------------------|
+| 1           | Brian Meyer   | 1             | Web Services    | 9                     | 1                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 7           | Hannah Mazze  | 1             | Web Services    | 5                     | 2                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 2           | Jeremy Bird   | 1             | Web Services    | 4                     | 3                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 3           | Joe Smith     | 2             | IT Services     | 6                     | 1                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 9           | Genny Goodman | 2             | IT Services     | 5                     | 2                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 4           | Alex Rogers   | 2             | IT Services     | 4                     | 3                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 5           | Julian Smith  | 3             | Networking      | 6                     | 1                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 6           | Ginger Meyer  | 3             | Networking      | 5                     | 2                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+| 11          | Mark Korte    | 3             | Networking      | 3                     | 3                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
