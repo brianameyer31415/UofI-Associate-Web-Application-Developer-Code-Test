@@ -1,6 +1,6 @@
-# Brian M - UofI Associate Web Application Developer Code Test
+# UofI Associate Web Application Developer Code Test - Brian Meyer
 
-### Prompt:
+## Prompt:
 With three tables of normalized data named: Employees, Departments, Tickets. Assuming all the data you require exists within these tables, write a query to report the top employee in each department with the most resolved tickets last month.  (If you are able, return the top 3 from each department.)
 
 
@@ -138,3 +138,8 @@ order by department_id asc, rank_in_department asc;
 | 5           | Julian Smith  | 3             | Networking      | 6                     | 1                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 | 6           | Ginger Meyer  | 3             | Networking      | 5                     | 2                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 | 11          | Mark Korte    | 3             | Networking      | 3                     | 3                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+
+
+
+## Dev Notes:
+I have attached SQL and CSV exports of the test data I used for this query. Please feel free to import the testing data into your own database enviorment and run the querys!
