@@ -150,7 +150,7 @@ order by department_id asc, rank_in_department asc;
 | 6           | Ginger Meyer  | 3             | Networking      | 5                     | 2                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 | 11          | Mark Korte    | 3             | Networking      | 3                     | 3                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 
-Similar to the first solution, this script will encounter issues if no additional data is added to the tickets table. In this case, it will stop producing results starting February 1, 2025.
+Similar to the first solution, this script will encounter issues if no additional data is added to the tickets table. In this case, it will stop producing results starting March 1, 2025.
 
 </br>
 </br>
