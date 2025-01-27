@@ -80,7 +80,7 @@ order by department_id, rank_in_department;
 | 11          | Mark Korte    | 3             | Networking      | 6                     | 3                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
 
 
-Solution one retrieves the top three employees from each department who resolved the most tickets within the past ~30 days. The README file includes the results of the query executed on January 24, 2025. Without additional data added to the tickets table, the script may eventually produce no results, as previously closed tickets will fall outside the 30-day window.
+Without additional data added to the tickets table, the script may eventually produce no results, as previously closed tickets will fall outside the 30-day window.
 
 </br>
 
@@ -150,7 +150,7 @@ order by department_id asc, rank_in_department asc;
 | 6           | Ginger Meyer  | 3             | Networking      | 5                     | 2                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 | 11          | Mark Korte    | 3             | Networking      | 3                     | 3                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 
-Solution two retrieves the top three employees from each department who resolved the most tickets in the previous calendar month. For example, if this SQL query is executed in January 2025, it will specifically target tickets closed during December 2024. However, similar to the first solution, this script will encounter issues if no additional data is added to the tickets table. In this case, it will stop producing results starting February 1, 2025.
+Similar to the first solution, this script will encounter issues if no additional data is added to the tickets table. In this case, it will stop producing results starting February 1, 2025.
 
 </br>
 </br>
