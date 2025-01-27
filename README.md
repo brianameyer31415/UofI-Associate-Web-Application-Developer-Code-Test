@@ -4,6 +4,19 @@
 With three tables of normalized data named: Employees, Departments, Tickets. Assuming all the data you require exists within these tables, write a query to report the top employee in each department with the most resolved tickets last month.  (If you are able, return the top 3 from each department.)
 
 </br>
+
+The queries are designed based on the following table structure:
+
+• Employees: employee_id, first_name, last_name, department_id
+
+• Departments: department_id, department_name
+
+• Tickets: ticket_id, status, data_added, resolved_date, employee_id
+
+</br>
+
+### I have tackled this question using two different approaches and have included both solutions for your review.
+
 </br>
  
 ## Solution One:
@@ -67,8 +80,8 @@ order by department_id, rank_in_department;
 | 11          | Mark Korte    | 3             | Networking      | 6                     | 3                  | 2024-12-24 23:39:32.113| 2025-01-24 23:39:32.113|
 
 
+Solution one retrieves the top three employees from each department who resolved the most tickets within the past ~30 days. The README file includes the results of the query executed on January 24, 2025. Without additional data added to the tickets table, the script may eventually produce no results, as previously closed tickets will fall outside the 30-day window.
 
-</br>
 </br>
 
 ## Solution Two:
@@ -136,6 +149,8 @@ order by department_id asc, rank_in_department asc;
 | 5           | Julian Smith  | 3             | Networking      | 6                     | 1                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 | 6           | Ginger Meyer  | 3             | Networking      | 5                     | 2                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
 | 11          | Mark Korte    | 3             | Networking      | 3                     | 3                  | 2024-12-01 00:00:00    | 2024-12-31 23:59:59    |
+
+Solution two retrieves the top three employees from each department who resolved the most tickets in the previous calendar month. For example, if this SQL query is executed in January 2025, it will specifically target tickets closed during December 2024. However, similar to the first solution, this script will encounter issues if no additional data is added to the tickets table. In this case, it will stop producing results starting February 1, 2025.
 
 </br>
 </br>
